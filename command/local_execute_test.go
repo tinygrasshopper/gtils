@@ -8,7 +8,7 @@ import (
 	"os/exec"
 	"strings"
 
-	. "github.com/pivotalservices/cfops/command"
+	. "github.com/pivotalservices/beergut/command"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
