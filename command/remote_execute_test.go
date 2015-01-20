@@ -8,7 +8,7 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/pivotalservices/beergut/command"
+	. "github.com/pivotalservices/gtils/command"
 )
 
 type mockClient struct {

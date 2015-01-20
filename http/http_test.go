@@ -8,7 +8,7 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/pivotalservices/beergut/http"
+	. "github.com/pivotalservices/gtils/http"
 )
 
 var (
