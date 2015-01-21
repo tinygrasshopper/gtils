@@ -40,6 +40,11 @@ func NewPgRemoteDump(port int, database, username, password string, sshCfg comma
 	}, err
 }
 
+func (s *PgDump) Import(io.Reader) (err error) {
+	panic("you need to implement this")
+	return
+}
+
 func (s *PgDump) Dump(dest io.Writer) (err error) {
 	err = s.Caller.Execute(dest, s.getDumpCommand())
 	return
