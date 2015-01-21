@@ -13,16 +13,23 @@ type HttpGateway struct {
 	username    string
 	password    string
 	contentType string
-	handler     HttpResponseHandler
+	handleResponse  HandleRespFunc
 }
 
-func NewHttpGateway(endpoint, username, password, contentType string, handler HttpResponseHandler) *HttpGateway {
+type HandleRespFunc func (response *http.Response) (interface{}, error)
+
+func NewHttpGateway(endpoint, username, password, contentType string, handler HandleRespFunc) *HttpGateway {
+	if handler == nil {
+		handler = func (response *http.Response) (interface{}, error) {
+			return nil, nil
+		}
+	}
 	return &HttpGateway{
 		endpoint:    endpoint,
 		username:    username,
 		password:    password,
 		contentType: contentType,
-		handler:     handler,
+		handleResponse:     handler,
 	}
 }
 
@@ -44,7 +51,7 @@ func (gateway *HttpGateway) Execute(method string) (val interface{}, err error) 
 	if err != nil {
 		return
 	}
-	return gateway.handler.Handle(resp)
+	return gateway.handleResponse(resp)
 }
 
 func (gateway *HttpGateway) Upload(paramName, filename string, fileRef io.Reader, params map[string]string) (res *http.Response, err error) {
