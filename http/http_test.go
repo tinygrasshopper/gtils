@@ -56,7 +56,7 @@ func MockHandlerFunc(resp *http.Response) (val interface{},
 var _ = Describe("Http", func() {
 	var (
 		handler func (resp *http.Response) (val interface{}, err error)
-		gateway *HttpGateway
+		gateway HttpGateway
 	)
 	BeforeEach(func() {
 		requestCatcher = &http.Request{}
