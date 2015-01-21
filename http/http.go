@@ -18,23 +18,16 @@ type DefaultHttpGateway struct {
 	username       string
 	password       string
 	contentType    string
-	handleResponse HandleRespFunc
 }
 
 type HandleRespFunc func(response *http.Response) (interface{}, error)
 
-func NewHttpGateway(endpoint, username, password, contentType string, handler HandleRespFunc) HttpGateway {
-	if handler == nil {
-		handler = func(response *http.Response) (interface{}, error) {
-			return nil, nil
-		}
-	}
+func NewHttpGateway(endpoint, username, password, contentType string) HttpGateway {
 	return &DefaultHttpGateway{
 		endpoint:       endpoint,
 		username:       username,
 		password:       password,
 		contentType:    contentType,
-		handleResponse: handler,
 	}
 }
 
@@ -44,19 +37,12 @@ var NewRoundTripper = func() http.RoundTripper {
 	}
 }
 
-func (gateway *DefaultHttpGateway) Execute(method string) (val interface{}, err error) {
-	transport := NewRoundTripper()
-	req, err := http.NewRequest(method, gateway.endpoint, nil)
-	if err != nil {
-		return
-	}
-	req.SetBasicAuth(gateway.username, gateway.password)
-	req.Header.Set("Content-Type", gateway.contentType)
-	resp, err := transport.RoundTrip(req)
-	if err != nil {
-		return
-	}
-	return gateway.handleResponse(resp)
+func (gateway *HttpGateway) ExecuteFunc(method string, handler HandleRespFunc) (val interface{}, err error) {
+	return handleResponse(handler)
+}
+
+func (gateway *HttpGateway) Execute(method string) (val interface{}, err error) {
+	return handleResponse(nil)
 }
 
 func (gateway *DefaultHttpGateway) Upload(paramName, filename string, fileRef io.Reader, params map[string]string) (res *http.Response, err error) {
@@ -79,6 +65,27 @@ func (gateway *DefaultHttpGateway) Upload(paramName, filename string, fileRef io
 	}
 	return
 }
+
+func (gateway *DefaultHttpGateway) handleResponse(handleResponse HandleRespFunc)  (val interface{}, err error) {
+ 	transport := NewRoundTripper()
+	req, err := http.NewRequest(method, gateway.endpoint, nil)
+	if err != nil {
+		return
+	}
+	req.SetBasicAuth(gateway.username, gateway.password)
+	req.Header.Set("Content-Type", gateway.contentType)
+	resp, err := transport.RoundTrip(req)
+	if err != nil {
+		return
+	}
+	if handleResponse == nil {
+		handleResponse = func(response *http.Response) (interface{}, error) {
+			defer resp.Body.Close()
+			return ioutil.ReadAll(resp.Body)
+		}
+	  }
+	return handleResponse(resp)
+ }
 
 func (gateway *DefaultHttpGateway) makeRequest(body *bytes.Buffer) (res *http.Response, err error) {
 	var req *http.Request
