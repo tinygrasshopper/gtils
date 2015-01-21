@@ -25,7 +25,7 @@ type DefaultHttpGateway struct {
 
 type HandleRespFunc func(response *http.Response) (interface{}, error)
 
-func NewHttpGateway(endpoint, username, password, contentType string, handler HandleRespFunc) *DefaultHttpGateway {
+func NewHttpGateway(endpoint, username, password, contentType string, handler HandleRespFunc) HttpGateway {
 	if handler == nil {
 		handler = func(resp *http.Response) (interface{}, error) {
 			defer resp.Body.Close()
