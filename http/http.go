@@ -20,7 +20,7 @@ type DefaultHttpGateway struct {
 	username       string
 	password       string
 	contentType    string
-	handleResponse HandleRespFunc
+	HandleResponse HandleRespFunc
 }
 
 type HandleRespFunc func(response *http.Response) (interface{}, error)
