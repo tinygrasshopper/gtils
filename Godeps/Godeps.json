@@ -1,10 +1,14 @@
 {
 	"ImportPath": "github.com/pivotalservices/gtils",
-	"GoVersion": "go1.4",
+	"GoVersion": "go1.3.3",
 	"Packages": [
 		"./..."
 	],
 	"Deps": [
+		{
+			"ImportPath": "github.com/kr/fs",
+			"Rev": "2788f0dbd16903de03cb8186e5c7d97b69ad387b"
+		},
 		{
 			"ImportPath": "github.com/onsi/ginkgo",
 			"Comment": "v1.1.0-20-g75d0cd9",
@@ -14,6 +18,10 @@
 			"ImportPath": "github.com/onsi/gomega",
 			"Comment": "v1.0-19-g835b5e4",
 			"Rev": "835b5e4242c715976b98ed6bc6ece1d9c7879f66"
+		},
+		{
+			"ImportPath": "github.com/pkg/sftp",
+			"Rev": "506297c9013d2893d5c5daaa9155e7333a1c58de"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/ssh",
