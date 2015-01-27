@@ -35,7 +35,7 @@ var NewBoshGateway = func(director *BoshDirector, api *API, body io.Reader, path
 }
 
 func (director *BoshDirector) GetDeploymentManifest(deploymentName string) (manifest io.Reader, err error) {
-	pathParams := map[string]string{"deploymentName": deploymentName}
+	pathParams := map[string]string{"deployment": deploymentName}
 	m, err := retrieveManifestAPI.execute(director.ip, director.port, director.username, director.password, nil, pathParams, nil)
 	if err != nil {
 		return
