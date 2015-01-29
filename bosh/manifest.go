@@ -3,13 +3,14 @@ package bosh
 import (
 	"bytes"
 	"errors"
+	"io"
 	"io/ioutil"
 	"net/http"
 
 	"gopkg.in/yaml.v2"
 )
 
-func retrieveManifest(response *http.Response) (resp interface{}, err error) {
+func retrieveManifest(response *http.Response) (manifest io.Reader, err error) {
 	if response.StatusCode != 200 {
 		err = errors.New("The retriveing bosh manifest API response code is not equal to 200")
 		return
@@ -29,10 +30,4 @@ func retrieveManifest(response *http.Response) (resp interface{}, err error) {
 		return
 	}
 	return bytes.NewReader(data), nil
-}
-
-var retrieveManifestAPI API = API{
-	Path:           "deployments/{deployment}",
-	Method:         "GET",
-	HandleResponse: retrieveManifest,
 }
