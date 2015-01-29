@@ -1,6 +1,7 @@
 package bosh
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/pivotalservices/gtils/http"
@@ -15,36 +16,35 @@ type BoshDirector struct {
 	port     int
 	username string
 	password string
+	gateway  http.HttpGateway
 }
 
-func NewBoshDirector(ip, username, password string, port int) *BoshDirector {
+func NewBoshDirector(ip, username, password string, port int, gateway http.HttpGateway) *BoshDirector {
 	return &BoshDirector{
 		ip:       ip,
 		port:     port,
 		username: username,
 		password: password,
+		gateway:  gateway,
 	}
-}
-
-// We can continute to plugin more apis
-var APIs = map[string]API{"manifest": retrieveManifestAPI}
-
-var NewBoshGateway = func(endpoint, username, password, contentType string, handler http.HandleRespFunc, body io.Reader) (gateway http.HttpGateway) {
-	return http.NewHttpGateway(endpoint, username, password, contentType, handler, body)
-}
-
-func (director *BoshDirector) execute(api API, pathParams, queryParams map[string]string, body io.Reader) (ret interface{}, err error) {
-	endpoint, err := ParseUrl(director.ip, director.port, api.Path, pathParams, queryParams)
-	if err != nil {
-		return
-	}
-	gateway := NewBoshGateway(endpoint, director.ip, director.password, api.ContentType, api.HandleResponse, body)
-	return gateway.Execute(api.Method)
 }
 
 func (director *BoshDirector) GetDeploymentManifest(deploymentName string) (manifest io.Reader, err error) {
-	api := APIs["manifest"]
-	pathParams := map[string]string{"deployment": deploymentName}
-	m, err := director.execute(api, pathParams, nil, nil)
-	return m.(io.Reader), nil
+	endpoint := fmt.Sprintf("https://%s:%d/deployments/%s", director.ip, director.port, deploymentName)
+	if err != nil {
+		return
+	}
+	httpEntity := http.HttpRequestEntity{
+		Url:         endpoint,
+		Username:    director.username,
+		Password:    director.password,
+		ContentType: "text/yaml",
+	}
+	request := director.gateway.Get(httpEntity)
+	resp, err := request()
+	if err != nil {
+		return
+	}
+	manifest, err = retrieveManifest(resp)
+	return
 }
