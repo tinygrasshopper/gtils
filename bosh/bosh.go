@@ -11,6 +11,7 @@ type Bosh interface {
 	GetDeploymentManifest(deploymentName string) (io.Reader, error)
 	//Currently there is a defect on bosh director we need to pass in the manifest file
 	ChangeVMState(string, string, string, int, io.Reader) (int, error)
+	RetrieveTaskStatus(int) (string, error)
 }
 
 type BoshDirector struct {
@@ -54,12 +55,23 @@ func (director *BoshDirector) ChangeJobState(deploymentName, jobName, state stri
 	return retrieveTaskId(resp)
 }
 
-func (director *BoshDirector) getEntity(endpoint, ContentType string) (httpEntity http.HttpRequestEntity) {
+func (director *BoshDirector) RetrieveTaskStatus(taskId int) (task *Task, err error) {
+	endpoint := fmt.Sprintf("https://%s:%d/tasks/%d", director.ip, director.port, taskId)
+	httpEntity := director.getEntity(endpoint, http.NO_CONTENT_TYPE)
+	request := director.gateway.Get(httpEntity)
+	resp, err := request()
+	if err != nil {
+		return
+	}
+	return retrieveTaskStatus(resp)
+}
+
+func (director *BoshDirector) getEntity(endpoint, contentType string) (httpEntity http.HttpRequestEntity) {
 	httpEntity = http.HttpRequestEntity{
 		Url:         endpoint,
 		Username:    director.username,
 		Password:    director.password,
-		ContentType: "text/yaml",
+		ContentType: contentType,
 	}
 	return
 }

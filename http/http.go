@@ -6,6 +6,8 @@ import (
 	"net/http"
 )
 
+const NO_CONTENT_TYPE string = ""
+
 type HttpRequestEntity struct {
 	Url         string
 	Username    string
@@ -19,7 +21,10 @@ func Request(entity HttpRequestEntity, method string, body io.Reader) (response 
 	transport := NewRoundTripper()
 	req, err := http.NewRequest(method, entity.Url, body)
 	req.SetBasicAuth(entity.Username, entity.Password)
-	req.Header.Add("Content-Type", entity.ContentType)
+	if entity.ContentType != NO_CONTENT_TYPE {
+		req.Header.Add("Content-Type", entity.ContentType)
+	}
+
 	if err != nil {
 		return
 	}
