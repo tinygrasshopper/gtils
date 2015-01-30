@@ -11,6 +11,7 @@ import (
 
 	"github.com/pivotalservices/gtils/osutils"
 	. "github.com/pivotalservices/gtils/persistence"
+	"github.com/pivotalservices/gtils/testhelp"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -18,8 +19,6 @@ import (
 
 var (
 	pgCatchCommand string
-	readFailErr    error = errors.New("copy failed on read")
-	writeFailErr   error = errors.New("copy failed on write")
 )
 
 type pgMockSuccessCall struct{}
@@ -129,16 +128,16 @@ var _ = Describe("PgDump", func() {
 		Context("called w/ failed copy to remote", func() {
 			BeforeEach(func() {
 				pgDumpInstance.GetRemoteFile = func(*PgDump) (w io.Writer, err error) {
-					w = &errorReaderWriter{}
+					w = &testhelp.ErrorReadWriter{}
 					return
 				}
 			})
 
 			It("should return failed copy error", func() {
-				l := &errorReaderWriter{}
+				l := &testhelp.ErrorReadWriter{}
 				err := pgDumpInstance.Import(l)
 				Ω(err).ShouldNot(BeNil())
-				Ω(err).Should(Equal(readFailErr))
+				Ω(err).Should(Equal(testhelp.READ_FAIL_ERROR))
 			})
 		})
 
@@ -190,15 +189,3 @@ var _ = Describe("PgDump", func() {
 		})
 	})
 })
-
-type errorReaderWriter struct{}
-
-func (r *errorReaderWriter) Read(p []byte) (n int, err error) {
-	err = readFailErr
-	return
-}
-
-func (r *errorReaderWriter) Write(p []byte) (n int, err error) {
-	err = writeFailErr
-	return
-}
