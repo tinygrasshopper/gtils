@@ -133,6 +133,49 @@ var _ = Describe("Bosh", func() {
 				Ω(capturedEntity.ContentType).Should(Equal("text/yaml"))
 			})
 		})
+		Describe("Bosh Retrieve Task staus", func() {
+			var ()
+			Context("Http Request Failure", func() {
+				It("Should return error", func() {
+					httpRequestSuccessful = false
+					_, err := director.RetrieveTaskStatus(100)
+					Ω(err).ShouldNot(BeNil())
+				})
+			})
+			Context("Http Request Succeed", func() {
+				BeforeEach(func() {
+					httpRequestSuccessful = true
+				})
+				It("Should return error when http status code is non 200", func() {
+					responseMock = readFakeResponse(500, "", nil)
+					_, err := director.RetrieveTaskStatus(100)
+					Ω(err).ShouldNot(BeNil())
+				})
+				It("Should compose correct request when the http response is valid", func() {
+					responseMock = readFakeResponse(200, "", validHeader)
+					director.RetrieveTaskStatus(100)
+					Ω(capturedEntity.Url).Should(Equal("https://10.10.10.10:25555/tasks/100"))
+					Ω(capturedEntity.ContentType).Should(Equal(NO_CONTENT_TYPE))
+				})
+				It("Should return error when response task is invalid", func() {
+					responseMock = readFakeResponse(200, "fixtures/task_invalid.json", validHeader)
+					_, err := director.RetrieveTaskStatus(100)
+					Ω(err).ShouldNot(BeNil())
+				})
+				It("Should return nil error when response task is valid", func() {
+					responseMock = readFakeResponse(200, "fixtures/task.json", validHeader)
+					_, err := director.RetrieveTaskStatus(100)
+					Ω(err).Should(BeNil())
+				})
+				It("Should return correct task data", func() {
+					responseMock = readFakeResponse(200, "fixtures/task.json", validHeader)
+					task, _ := director.RetrieveTaskStatus(19)
+					Ω(task.State).Should(Equal("done"))
+					Ω(task.Id).Should(Equal(19))
+					Ω(task.Description).Should(Equal("create deployment"))
+				})
+			})
+		})
 	})
 
 })
