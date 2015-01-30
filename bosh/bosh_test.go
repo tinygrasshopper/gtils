@@ -59,22 +59,22 @@ var _ = Describe("Bosh", func() {
 				httpRequestSuccessful = true
 			})
 			It("Should return error when http status code is non 200", func() {
-				responseMock = readFakeResponse(500, "fixtures/manifest.yml", nil)
+				responseMock = readFakeResponse(500, "fixtures/manifest.json", nil)
 				_, err := director.GetDeploymentManifest("name")
 				Ω(err).ShouldNot(BeNil())
 			})
 			It("Should return error when http response is not valid manifest", func() {
-				responseMock = readFakeResponse(200, "fixtures/manifest_invalid.yml", nil)
+				responseMock = readFakeResponse(200, "fixtures/manifest_invalid.json", nil)
 				_, err := director.GetDeploymentManifest("name")
 				Ω(err).ShouldNot(BeNil())
 			})
 			It("Should return nil error when http response is valid manifest", func() {
-				responseMock = readFakeResponse(200, "fixtures/manifest.yml", nil)
+				responseMock = readFakeResponse(200, "fixtures/manifest.json", nil)
 				_, err := director.GetDeploymentManifest("name")
 				Ω(err).Should(BeNil())
 			})
 			It("Should compose correct request when the http response is valid", func() {
-				responseMock = readFakeResponse(200, "fixtures/manifest.yml", nil)
+				responseMock = readFakeResponse(200, "fixtures/manifest.json", nil)
 				director.GetDeploymentManifest("name")
 				Ω(capturedEntity.Url).Should(Equal("https://10.10.10.10:25555/deployments/name"))
 				Ω(capturedEntity.Username).Should(Equal("test"))
