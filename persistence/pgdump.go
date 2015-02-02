@@ -23,7 +23,7 @@ type PgDump struct {
 	Password      string
 	DbFile        string
 	Caller        command.Executer
-	GetRemoteFile func(*PgDump) (io.Writer, error)
+	GetRemoteFile func(command.SshConfig) (io.WriteCloser, error)
 }
 
 func NewPgDump(ip string, port int, database, username, password string) *PgDump {
@@ -60,9 +60,10 @@ func (s *PgDump) Import(lfile io.Reader) (err error) {
 }
 
 func (s *PgDump) uploadBackupFile(lfile io.Reader) (err error) {
-	var rfile io.Writer
+	var rfile io.WriteCloser
 
-	if rfile, err = s.GetRemoteFile(s); err == nil {
+	if rfile, err = s.GetRemoteFile(s.sshCfg); err == nil {
+		defer rfile.Close()
 		_, err = io.Copy(rfile, lfile)
 	}
 	return
@@ -83,20 +84,20 @@ func (s *PgDump) getDumpCommand() string {
 	)
 }
 
-func getRemoteFile(s *PgDump) (rfile io.Writer, err error) {
+func getRemoteFile(sshCfg command.SshConfig) (rfile io.WriteCloser, err error) {
 	var (
 		sshconn    *ssh.Client
 		sftpclient *sftp.Client
 	)
 
 	clientconfig := &ssh.ClientConfig{
-		User: s.sshCfg.Username,
+		User: sshCfg.Username,
 		Auth: []ssh.AuthMethod{
-			ssh.Password(s.sshCfg.Password),
+			ssh.Password(sshCfg.Password),
 		},
 	}
 
-	if sshconn, err = ssh.Dial("tcp", fmt.Sprintf("%s:%d", s.sshCfg.Host, s.sshCfg.Port), clientconfig); err == nil {
+	if sshconn, err = ssh.Dial("tcp", fmt.Sprintf("%s:%d", sshCfg.Host, sshCfg.Port), clientconfig); err == nil {
 
 		if sftpclient, err = sftp.NewClient(sshconn); err == nil {
 			rfile, err = osutils.SafeCreateSSH(sftpclient, PGDMP_REMOTE_IMPORT_PATH)

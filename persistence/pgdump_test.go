@@ -9,9 +9,10 @@ import (
 	"os"
 	"path"
 
+	"github.com/pivotalservices/gtils/command"
+	"github.com/pivotalservices/gtils/mock"
 	"github.com/pivotalservices/gtils/osutils"
 	. "github.com/pivotalservices/gtils/persistence"
-	"github.com/pivotalservices/gtils/testhelp"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -70,7 +71,7 @@ var _ = Describe("PgDump", func() {
 
 		Context("called w/ successful sftp connection", func() {
 			BeforeEach(func() {
-				pgDumpInstance.GetRemoteFile = func(*PgDump) (w io.Writer, err error) {
+				pgDumpInstance.GetRemoteFile = func(command.SshConfig) (w io.WriteCloser, err error) {
 					w, err = osutils.SafeCreate(remoteFilePath)
 					return
 				}
@@ -98,7 +99,7 @@ var _ = Describe("PgDump", func() {
 
 		Context("called w/ failed sftp connection", func() {
 			BeforeEach(func() {
-				pgDumpInstance.GetRemoteFile = func(*PgDump) (w io.Writer, err error) {
+				pgDumpInstance.GetRemoteFile = func(command.SshConfig) (w io.WriteCloser, err error) {
 					err = sftpFailErr
 					return
 				}
@@ -127,17 +128,17 @@ var _ = Describe("PgDump", func() {
 
 		Context("called w/ failed copy to remote", func() {
 			BeforeEach(func() {
-				pgDumpInstance.GetRemoteFile = func(*PgDump) (w io.Writer, err error) {
-					w = &testhelp.ErrorReadWriter{}
+				pgDumpInstance.GetRemoteFile = func(command.SshConfig) (w io.WriteCloser, err error) {
+					w = mock.NewReadWriteCloser(mock.READ_FAIL_ERROR, nil, nil)
 					return
 				}
 			})
 
 			It("should return failed copy error", func() {
-				l := &testhelp.ErrorReadWriter{}
+				l := mock.NewReadWriteCloser(mock.READ_FAIL_ERROR, nil, nil)
 				err := pgDumpInstance.Import(l)
 				Ω(err).ShouldNot(BeNil())
-				Ω(err).Should(Equal(testhelp.READ_FAIL_ERROR))
+				Ω(err).Should(Equal(mock.READ_FAIL_ERROR))
 			})
 		})
 
