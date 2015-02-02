@@ -55,7 +55,7 @@ func (s *PgDump) Dump(dest io.Writer) (err error) {
 }
 
 func (s *PgDump) getDumpCommand() string {
-	return fmt.Sprintf("PGPASSWORD=%s && /var/vcap/packages/postgres/bin/pg_dump -h %s -U %s -p %d %s",
+	return fmt.Sprintf("PGPASSWORD=%s /var/vcap/packages/postgres/bin/pg_dump -h %s -U %s -p %d %s",
 		s.Password,
 		s.Ip,
 		s.Username,
