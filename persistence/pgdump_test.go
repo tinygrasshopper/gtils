@@ -62,6 +62,7 @@ var _ = Describe("PgDump", func() {
 				Ip:       ip,
 				Username: username,
 				Password: password,
+				Caller:   &pgMockSuccessCall{},
 			}
 		})
 
@@ -91,7 +92,6 @@ var _ = Describe("PgDump", func() {
 				lf, _ := os.Open(localFilePath)
 				defer lf.Close()
 				larray, _ := ioutil.ReadAll(lf)
-
 				Ω(err).Should(BeNil())
 				Ω(rarray).Should(Equal(larray))
 			})
@@ -142,6 +142,21 @@ var _ = Describe("PgDump", func() {
 			})
 		})
 
+		Context("remote call w/ failed result from first call", func() {
+			BeforeEach(func() {
+				pgDumpInstance.Caller = &pgMockFailFirstCall{}
+				pgDumpInstance.GetRemoteFile = func(command.SshConfig) (w io.WriteCloser, err error) {
+					w = mock.NewReadWriteCloser(nil, nil, nil)
+					return
+				}
+			})
+
+			It("should return a call error", func() {
+				l := mock.NewReadWriteCloser(nil, nil, nil)
+				err := pgDumpInstance.Import(l)
+				Ω(err).ShouldNot(BeNil())
+			})
+		})
 	})
 
 	Context("With caller successfully execute the command", func() {
@@ -161,7 +176,7 @@ var _ = Describe("PgDump", func() {
 
 		It("Should execute the pg command", func() {
 			pgDumpInstance.Dump(&writer)
-			Ω(pgCatchCommand).Should(Equal("PGPASSWORD=testpass /var/vcap/packages/postgres/bin/pg_dump -h 0.0.0.0 -U testuser -p 0 "))
+			Ω(pgCatchCommand).Should(Equal("PGPASSWORD=testpass pg_dump -h 0.0.0.0 -U testuser -p 0 "))
 		})
 
 		It("Should return nil error", func() {
