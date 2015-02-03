@@ -33,7 +33,7 @@ func retrieveTaskId(resp *http.Response) (taskId int, err error) {
 
 func retrieveTaskStatus(resp *http.Response) (task *Task, err error) {
 	if resp.StatusCode != 200 {
-		err = errors.New("Retrieving Task status failed")
+		err = errors.New("The resp code from return task should return 200")
 		return
 	}
 	task = &Task{}
