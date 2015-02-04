@@ -3,6 +3,7 @@ package persistence_test
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -148,10 +149,12 @@ var _ = Describe("MysqlDump", func() {
 				err := mysqlDumpInstance.Dump(&writer)
 				Ω(err).Should(BeNil())
 			})
+
 			It("Should execute mysqldump command", func() {
 				var b bytes.Buffer
 				mysqlDumpInstance.Dump(&b)
-				Ω(b.String()).Should(Equal("mysqldump -u testuser -h 0.0.0.0 --password=testpass --all-databases"))
+				cmd := fmt.Sprintf("%s -u %s -h %s --password=%s --all-databases", MSQLDMP_DUMP_BIN, username, ip, password)
+				Ω(b.String()).Should(Equal(cmd))
 			})
 		})
 

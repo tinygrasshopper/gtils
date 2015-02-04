@@ -3,6 +3,7 @@ package persistence_test
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -152,7 +153,8 @@ var _ = Describe("PgDump", func() {
 			It("Should execute the pg command", func() {
 				var b bytes.Buffer
 				pgDumpInstance.Dump(&b)
-				Ω(b.String()).Should(Equal("PGPASSWORD=testpass pg_dump -h 0.0.0.0 -U testuser -p 0 "))
+				cmd := fmt.Sprintf("PGPASSWORD=%s %s -h %s -U %s -p 0 ", password, PGDMP_DUMP_BIN, ip, username)
+				Ω(b.String()).Should(Equal(cmd))
 			})
 
 			It("Should return nil error", func() {
