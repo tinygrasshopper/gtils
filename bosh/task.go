@@ -16,6 +16,14 @@ type Task struct {
 	Result      string `json:"result"`
 }
 
+const (
+	ERROR      int = 0
+	PROCESSING int = 1
+	DONE       int = 2
+)
+
+var TASKRESULT map[string]int = map[string]int{"error": ERROR, "processing": PROCESSING, "done": DONE}
+
 func retrieveTaskId(resp *http.Response) (taskId int, err error) {
 	if resp.StatusCode != 302 {
 		err = TaskRedirectStatusCodeError
