@@ -35,10 +35,6 @@ func NewLager(log *logger) Logger {
 	return log
 }
 
-// func (l *logger) GetSink() io.Writer {
-// 	return l.Writer
-// }
-
 func (l *logger) Debug(action string, data ...Data) {
 	l.Logger.Debug(action, toLagerData(data...))
 }

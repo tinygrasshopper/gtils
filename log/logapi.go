@@ -7,16 +7,6 @@ import (
 	"github.com/pivotal-golang/lager"
 )
 
-type LogType uint
-
-type Log struct {
-	Timestamp string `json:"timestamp"`
-	Source    string `json:"source"`
-	Message   string `json:"message"`
-	LogLevel  string `json:"log_level"`
-	Data      Data   `json:"data"`
-}
-
 type Data map[string]interface{}
 
 type Logger interface {
@@ -31,6 +21,8 @@ type logger struct {
 	Name   string
 	Writer io.Writer
 }
+
+type LogType uint
 
 const (
 	Lager LogType = iota
