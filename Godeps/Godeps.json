@@ -20,6 +20,10 @@
 			"Rev": "dc751ce5f266d83c26fae5c0a9093973b29cb61d"
 		},
 		{
+			"ImportPath": "github.com/pivotal-golang/lager",
+			"Rev": "ad0fea85471a401834f7eabfc15bf66a76d0e58d"
+		},
+		{
 			"ImportPath": "github.com/pkg/sftp",
 			"Rev": "506297c9013d2893d5c5daaa9155e7333a1c58de"
 		},
