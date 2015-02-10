@@ -22,7 +22,6 @@ func NewLager(log *logger) Logger {
 	}
 
 	logger := lager.NewLogger(log.Name)
-	fmt.Println()
 	logger.RegisterSink(lager.NewWriterSink(log.Writer, minLagerLogLevel))
 	log.Logger = logger
 
