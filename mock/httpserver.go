@@ -13,7 +13,6 @@ type HttpServer struct {
 func (s *HttpServer) Setup() {
 	s.Mux = http.NewServeMux()
 	s.Server = httptest.NewServer(s.Mux)
-	//client.BaseURL, _ = url.Parse(server.URL)
 }
 
 func (s *HttpServer) Teardown() {
