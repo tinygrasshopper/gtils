@@ -1,6 +1,7 @@
 FROM ubuntu
 MAINTAINER jcalabrese@pivotal.io
 
+ADD ssh_creds /tmp/ssh_creds
 # Add the PostgreSQL PGP key to verify their Debian packages.
 # It should be the same key as https://www.postgresql.org/media/keys/ACCC4CF8.asc
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
@@ -22,7 +23,7 @@ RUN apt-get update && apt-get install -y python-software-properties software-pro
 RUN apt-get update 
 RUN apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
-RUN echo 'root:screencast' | chpasswd
+RUN cat /tmp/ssh_creds | chpasswd
 RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 # SSH login fix. Otherwise user is kicked off after login
