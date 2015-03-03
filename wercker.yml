@@ -2,13 +2,8 @@ box: motemen/golang-goxc
 build:
   # The steps that will be executed on build
   steps:
-    - script:
-        name: available docker
-        code: |
-          sudo apt-cache search docker
-
     - install-packages:
-        packages: lxc-docker
+        packages: curl
 
     # Sets the go workspace and places you package
     # at the right place in the workspace tree
@@ -17,6 +12,7 @@ build:
     - script:
         name: test docker
         code: |
+          curl -sSL https://get.docker.com/ubuntu/ | sudo sh
           docker -v
 
     # Get the dependencies
