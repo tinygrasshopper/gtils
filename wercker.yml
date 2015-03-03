@@ -2,9 +2,17 @@ box: motemen/golang-goxc
 build:
   # The steps that will be executed on build
   steps:
+    - install-packages:
+        packages: docker.io
+
     # Sets the go workspace and places you package
     # at the right place in the workspace tree
     - setup-go-workspace
+
+    - script:
+        name: test docker
+        code: |
+          docker -v
 
     # Get the dependencies
     - script:
