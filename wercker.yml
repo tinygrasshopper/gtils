@@ -3,7 +3,7 @@ build:
   # The steps that will be executed on build
   steps:
     - install-packages:
-        packages: docker.io
+        packages: lxc-docker
 
     # Sets the go workspace and places you package
     # at the right place in the workspace tree
