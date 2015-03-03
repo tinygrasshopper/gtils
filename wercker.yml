@@ -2,6 +2,11 @@ box: motemen/golang-goxc
 build:
   # The steps that will be executed on build
   steps:
+    - script:
+        name: available docker
+        code: |
+          sudo apt-cache search docker
+
     - install-packages:
         packages: lxc-docker
 
