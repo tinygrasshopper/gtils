@@ -1,0 +1,6 @@
+#!/bin/bash
+/usr/sbin/rsyslogd -c5
+/usr/sbin/sshd
+# Set the default command to run when starting the container
+/usr/lib/postgresql/9.3/bin/postgres /var/lib/postgresql/9.3/main -c config_file=/etc/postgresql/9.3/main/postgresql.conf
+tail -f /var/log/syslog
