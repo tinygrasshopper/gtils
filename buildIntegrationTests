@@ -2,6 +2,8 @@
 
 INTEGRATION_FOLDER_NAME="_integration"
 DOCKER_FILE="Dockerfile"
+USER="root"
+PASS="password"
 
 #Build Docker containers
 find . -regex ".*${INTEGRATION_FOLDER_NAME}.*${DOCKER_FILE}" | { 
@@ -9,6 +11,7 @@ find . -regex ".*${INTEGRATION_FOLDER_NAME}.*${DOCKER_FILE}" | {
     int_base=$(dirname $OUT); 
     buildname=$(basename $int_base)
     echo "building "${int_base}
+    (cd ${int_base} && echo "${USER}:${PASS}" > ssh_creds)
     (cd ${int_base} && docker build -t ${buildname} .)
   done; 
 }
