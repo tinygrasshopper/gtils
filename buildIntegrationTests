@@ -1,0 +1,14 @@
+#!/bin/bash
+
+INTEGRATION_FOLDER_NAME="_integration"
+DOCKER_FILE="Dockerfile"
+
+#Build Docker containers
+find . -regex ".*${INTEGRATION_FOLDER_NAME}.*${DOCKER_FILE}" | { 
+  while read -r OUT; do
+    int_base=$(dirname $OUT); 
+    buildname=$(basename $int_base)
+    echo "building "${int_base}
+    (cd ${int_base} && docker build -t ${buildname} .)
+  done; 
+}

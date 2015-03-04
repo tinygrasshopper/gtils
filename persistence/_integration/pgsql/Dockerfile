@@ -1,7 +1,22 @@
 FROM ubuntu
 MAINTAINER jcalabrese@pivotal.io
 
+##################ssh bootstrap
 ADD ssh_creds /tmp/ssh_creds
+RUN apt-get update 
+RUN apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+RUN cat /tmp/ssh_creds | chpasswd
+RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+#ssh done
+
+#################### postgres bootstrap
 # Add the PostgreSQL PGP key to verify their Debian packages.
 # It should be the same key as https://www.postgresql.org/media/keys/ACCC4CF8.asc
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
@@ -17,22 +32,6 @@ RUN apt-get update && apt-get install -y python-software-properties software-pro
 
 # Note: The official Debian and Ubuntu images automatically ``apt-get clean``
 # after each ``apt-get``
-
-
-##################ssh bootstrap
-RUN apt-get update 
-RUN apt-get install -y openssh-server
-RUN mkdir /var/run/sshd
-RUN cat /tmp/ssh_creds | chpasswd
-RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-
-# SSH login fix. Otherwise user is kicked off after login
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
-
-ENV NOTVISIBLE "in users profile"
-RUN echo "export VISIBLE=now" >> /etc/profile
-
-
 
 # Run the rest of the commands as the ``postgres`` user created by the ``postgres-9.3`` package when it was ``apt-get installed``
 USER postgres
@@ -54,9 +53,10 @@ RUN echo "listen_addresses='*'" >> /etc/postgresql/9.3/main/postgresql.conf
 
 # Add VOLUMEs to allow backup of config, logs and databases
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
+#postgres done
+
 
 USER root
-
 EXPOSE 22
 EXPOSE 5432
 ADD start /etc/start
