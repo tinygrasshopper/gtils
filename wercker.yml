@@ -13,7 +13,7 @@ build:
         name: test docker
         code: |
           curl -sSL https://get.docker.com/ubuntu/ | sudo sh
-          ./buildIntegrationTests
+          sudo ./buildIntegrationTests
           docker -v
 
     # Get the dependencies
