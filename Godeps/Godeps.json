@@ -24,12 +24,13 @@
 			"Rev": "ad0fea85471a401834f7eabfc15bf66a76d0e58d"
 		},
 		{
-			"ImportPath": "github.com/pkg/sftp",
-			"Rev": "506297c9013d2893d5c5daaa9155e7333a1c58de"
+			"ImportPath": "github.com/pivotalservices/sftp",
+			"Rev": "dffda93cc86c0aa96dc580da7c57c8301519b262"
 		},
 		{
-			"ImportPath": "golang.org/x/crypto/ssh",
-			"Rev": "7495b841c06cc0b1eba03e10d8e191e21bc66035"
+			"ImportPath": "gopkg.in/datianshi/crypto.v1/ssh",
+			"Comment": "v1",
+			"Rev": "968024fffabd9aa8d34a3a27b19a2351549aa06c"
 		}
 	]
 }
