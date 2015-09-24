@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/pivotalservices/gtils",
-	"GoVersion": "go1.4.1",
+	"GoVersion": "go1.4.2",
 	"Packages": [
 		"./..."
 	],
@@ -24,13 +24,16 @@
 			"Rev": "ad0fea85471a401834f7eabfc15bf66a76d0e58d"
 		},
 		{
-			"ImportPath": "github.com/pivotalservices/sftp",
-			"Rev": "dffda93cc86c0aa96dc580da7c57c8301519b262"
+			"ImportPath": "github.com/pkg/sftp",
+			"Rev": "9d712e91b1f05c35bf7e8fa71a1b09392925d452"
 		},
 		{
-			"ImportPath": "gopkg.in/datianshi/crypto.v1/ssh",
-			"Comment": "v1",
-			"Rev": "968024fffabd9aa8d34a3a27b19a2351549aa06c"
+			"ImportPath": "golang.org/x/crypto/curve25519",
+			"Rev": "e74b0352e547e3830f8471e7ae9609239c52606f"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh",
+			"Rev": "e74b0352e547e3830f8471e7ae9609239c52606f"
 		}
 	]
 }
