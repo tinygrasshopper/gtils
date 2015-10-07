@@ -36,6 +36,11 @@ build:
 
 deploy:
   steps: 
+    - script:
+        name: install-packages
+        code: |
+          sudo apt-get install -y ssh wget
+
     - add-ssh-key:
         keyname: PCF_GITHUB_KEY
   
