@@ -1,4 +1,10 @@
 box: google/golang
+services:
+  - id: xchapter7x/pcfpsql
+    env:
+      DB_USER: dbuser
+      DB_PASS: dbpass
+      
 build:
   # The steps that will be executed on build
   steps:
@@ -15,11 +21,22 @@ build:
           go get -u github.com/tools/godep
           export PATH=$WERCKER_SOURCE_DIR/bin:$PATH
 
+    - script:
+        name: output ssh/pgsql info
+        code: |
+          echo DB- ${PCFPSQL_ENV_DB_PASS} ${PCFPSQL_ENV_DB_USER} SSH- ${PCFPSQL_PORT_22_TCP_ADDR} ${PCFPSQL_ENV_SSH_USER} ${PCFPSQL_ENV_SSH_PASS}
+
     # Test the project
     - script:
         name: go test
         code: |
           godep go test ./... -v -race
+
+    # Test the project
+    - script:
+        name: go integration tests
+        code: |
+          godep go test ./persistence/_integration_tests -v -race
 
     # Setting the coverage watermark low.
     # This should be raised as we gain more coverage...
