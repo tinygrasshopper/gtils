@@ -22,7 +22,7 @@ build:
           export PATH=$WERCKER_SOURCE_DIR/bin:$PATH
 
     - script:
-        name: output ssh/pgsql info
+        name: output pcfpsql service state
         code: |
           echo DB- ${PCFPSQL_ENV_DB_PASS} ${PCFPSQL_ENV_DB_USER} SSH- ${PCFPSQL_PORT_22_TCP_ADDR} ${PCFPSQL_ENV_SSH_USER} ${PCFPSQL_ENV_SSH_PASS}
 
