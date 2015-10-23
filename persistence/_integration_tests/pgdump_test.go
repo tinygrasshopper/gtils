@@ -101,7 +101,6 @@ var _ = Describe("PgDump Integration Tests", func() {
 				inputReader, _ := os.Open("fixtures/postgres_dump.txt")
 				remoteEnvStager, _ := NewPgRemoteDump(postgresPort, postgresDB, postgresUser, postgresPass, sshConfig)
 				remoteEnvStager.Import(inputReader)
-
 				PGDMP_DUMP_BIN = strings.TrimPrefix(PGDMP_DUMP_BIN, cfBinDir)
 				pgRemoteDump, sshConnectionErr = NewPgRemoteDump(postgresPort, postgresDB, postgresUser, postgresPass, sshConfig)
 				remoteCommandErr = pgRemoteDump.Dump(&outputWriter)
