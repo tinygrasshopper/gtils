@@ -6,3 +6,18 @@ Arguably useful & reusable packages for our golang projects.
 [![GoDoc](http://godoc.org/github.com/pivotalservices/gtils?status.png)](http://godoc.org/github.com/pivotalservices/gtils)
 
 
+## Running tests / build pipeline locally
+
+```
+
+# install the wercker cli
+$ curl -L https://install.wercker.com | sh
+
+# make sure a docker host is running
+$ boot2docker up && $(boot2docker shellinit)
+
+# run the build pipeline locally, to test your code locally
+$ ./testrunner
+
+```
+
