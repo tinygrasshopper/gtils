@@ -1,4 +1,4 @@
-box: google/golang
+box: golang
 services:
   - id: xchapter7x/pcfpsql
     env:
