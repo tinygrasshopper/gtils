@@ -26,12 +26,12 @@ var _ = Describe("PgDump Integration Tests", func() {
 	)
 	var (
 		postgresDB   = "console"
-		postgresUser = os.Getenv("PCFPSQL_ENV_DB_USER")
-		postgresPass = os.Getenv("PCFPSQL_ENV_DB_PASS")
-		postgresPort = 5432
-		sshUser      = os.Getenv("PCFPSQL_ENV_SSH_USER")
-		sshPass      = os.Getenv("PCFPSQL_ENV_SSH_PASS")
-		sshHost      = os.Getenv("PCFPSQL_PORT_22_TCP_ADDR")
+		postgresUser = os.Getenv("UAADB_INT_ENV_DB_USER")
+		postgresPass = os.Getenv("UAADB_INT_ENV_DB_PASS")
+		postgresPort = 2544
+		sshUser      = os.Getenv("UAADB_INT_ENV_SSH_USER")
+		sshPass      = os.Getenv("UAADB_INT_ENV_SSH_PASS")
+		sshHost      = os.Getenv("UAADB_INT_PORT_22_TCP_ADDR")
 		pgRemoteDump *PgDump
 		sshConfig    = command.SshConfig{
 			Username: sshUser,

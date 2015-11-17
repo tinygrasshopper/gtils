@@ -1,9 +1,6 @@
 box: golang
 services:
-  - id: xchapter7x/pcfpsql
-    env:
-      DB_USER: dbuser
-      DB_PASS: dbpass
+  - id: xchapter7x/uaadb-int
       
 build:
   # The steps that will be executed on build
@@ -22,9 +19,9 @@ build:
           export PATH=$WERCKER_SOURCE_DIR/bin:$PATH
 
     - script:
-        name: output pcfpsql service state
+        name: output integration service variables
         code: |
-          echo DB- ${PCFPSQL_ENV_DB_PASS} ${PCFPSQL_ENV_DB_USER} SSH- ${PCFPSQL_PORT_22_TCP_ADDR} ${PCFPSQL_ENV_SSH_USER} ${PCFPSQL_ENV_SSH_PASS}
+          echo UAADB - ${UAADB_INT_ENV_SSH_USER} ${UAADB_INT_ENV_SSH_PASS} ${UAADB_INT_ENV_DB_USER} ${UAADB_INT_ENV_DB_PASS} ${UAADB_INT_PORT_22_TCP_ADDR}
 
     # Test the project
     - script:
