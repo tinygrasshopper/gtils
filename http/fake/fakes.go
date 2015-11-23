@@ -31,3 +31,12 @@ func (s *HttpRequestor) Put(entity ghttp.HttpRequestEntity, body io.Reader) ghtt
 		return
 	}
 }
+
+type MultiPart struct {
+	UploadCallCount int
+}
+
+func (s *MultiPart) Upload(conn ghttp.ConnAuth, paramName, filename string, fileRef io.Reader, params map[string]string) (res *http.Response, err error) {
+	s.UploadCallCount++
+	return
+}
