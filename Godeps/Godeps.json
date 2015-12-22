@@ -1,10 +1,15 @@
 {
 	"ImportPath": "github.com/pivotalservices/gtils",
-	"GoVersion": "go1.4.2",
+	"GoVersion": "go1.5.2",
 	"Packages": [
 		"./..."
 	],
 	"Deps": [
+		{
+			"ImportPath": "code.google.com/p/go-uuid/uuid",
+			"Comment": "null-15",
+			"Rev": "'35bc42037350f0078e3c974c6ea690f1926603ab'"
+		},
 		{
 			"ImportPath": "github.com/kr/fs",
 			"Rev": "2788f0dbd16903de03cb8186e5c7d97b69ad387b"
@@ -24,6 +29,10 @@
 			"Rev": "e8d5414f0947014548c2334044a0fac13187dfee"
 		},
 		{
+			"ImportPath": "github.com/pborman/uuid",
+			"Rev": "cccd189d45f7ac3368a0d127efb7f4d08ae0b655"
+		},
+		{
 			"ImportPath": "github.com/pivotal-golang/lager",
 			"Rev": "be52ae622d25728f17aac7330e4565201c19155c"
 		},
@@ -32,13 +41,18 @@
 			"Rev": "9d712e91b1f05c35bf7e8fa71a1b09392925d452"
 		},
 		{
+			"ImportPath": "github.com/technoweenie/multipartstreamer",
+			"Comment": "v1.0.1",
+			"Rev": "a90a01d73ae432e2611d178c18367fbaa13e0154"
+		},
+		{
 			"ImportPath": "github.com/xchapter7x/lo",
 			"Rev": "aa2602d0e8e8647f0ce7b53109b37040941915aa"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/ssh",
 			"Comment": "null-234",
-			"Rev": "60a80aaa50ff0e8506f61b1fa35078a24941be50"
+			"Rev": "'60a80aaa50ff0e8506f61b1fa35078a24941be50'"
 		}
 	]
 }
