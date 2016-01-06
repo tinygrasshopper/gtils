@@ -27,13 +27,13 @@ build:
     - script:
         name: go test
         code: |
-          godep go test ./... --ginkgo.skip="S3bucket" -v -race
+          godep go test ./... -v -race
 
     # Test the project
     - script:
         name: go integration tests
         code: |
-          godep go test ./persistence/_integration_tests --ginkgo.skip="S3bucket" -v -race
+          godep go test ./persistence/_integration_tests -v -race
 
     # Setting the coverage watermark low.
     # This should be raised as we gain more coverage...
