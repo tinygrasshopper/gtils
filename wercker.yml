@@ -1,7 +1,7 @@
 box: golang
 services:
   - id: xchapter7x/uaadb-int
-      
+
 build:
   # The steps that will be executed on build
   steps:
@@ -27,13 +27,13 @@ build:
     - script:
         name: go test
         code: |
-          godep go test ./... -v -race
+          godep go test ./... --ginkgo.skip="S3bucket" -v -race
 
     # Test the project
     - script:
         name: go integration tests
         code: |
-          godep go test ./persistence/_integration_tests -v -race
+          godep go test ./persistence/_integration_tests --ginkgo.skip="S3bucket" -v -race
 
     # Setting the coverage watermark low.
     # This should be raised as we gain more coverage...
@@ -49,7 +49,7 @@ build:
           cp -R ./ ${WERCKER_OUTPUT_DIR}
 
 deploy:
-  steps: 
+  steps:
     - script:
         name: install-packages
         code: |
@@ -57,7 +57,7 @@ deploy:
 
     - add-ssh-key:
         keyname: PCF_GITHUB_KEY
-  
+
     - wercker/add-to-known_hosts@1.4.0:
         hostname: github.com
         fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
