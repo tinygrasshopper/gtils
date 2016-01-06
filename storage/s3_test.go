@@ -14,7 +14,7 @@ var _ = Describe("S3bucket", func() {
 
 	testBin := make([]byte, 1<<8)
 	rand.Read(testBin)
-	s3, err := SafeCreateS3Bucket("s3", "s3.amazonaws.com", "pcfbackup-files", "", "")
+	s3, err := SafeCreateS3Bucket("s3.amazonaws.com", "pcfbackup-files", "", "")
 
 	It("should write", func() {
 		Ω(err).To(BeNil())

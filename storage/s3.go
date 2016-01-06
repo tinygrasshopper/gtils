@@ -18,19 +18,16 @@ type S3Bucket struct {
 }
 
 // SafeCreateS3Bucket creates an s3 bucket for storing files to an s3-compatible blobstore
-func SafeCreateS3Bucket(name, domain, bucket, accessKey, secretKey string) (*S3Bucket, error) {
+func SafeCreateS3Bucket(domain, bucket, accessKey, secretKey string) (*S3Bucket, error) {
 	s := &S3Bucket{
 		Bucket:    bucket,
-		Name:      name,
+		Name:      "s3",
 		Domain:    domain,
 		AccessKey: accessKey,
 		SecretKey: secretKey,
 	}
 	if s.Bucket == "" {
 		return nil, errors.New("bucket name is undefined")
-	}
-	if s.Name == "" {
-		return nil, errors.New("s3 name is undefined")
 	}
 	if s.Domain == "" {
 		return nil, errors.New("s3 domain is undefined")
