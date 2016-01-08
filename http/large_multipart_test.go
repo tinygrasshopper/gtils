@@ -29,7 +29,7 @@ var _ = Describe("Multipart", func() {
 			res            *http.Response
 			err            error
 			tmpfile        = fmt.Sprintf("/tmp/upload-", uuid.New())
-			headerSize     = 263
+			headerSize     = 272
 		)
 
 		BeforeEach(func() {
