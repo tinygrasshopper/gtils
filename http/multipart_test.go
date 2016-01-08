@@ -63,7 +63,7 @@ var _ = Describe("Multipart", func() {
 				Url: httpServerMock.Server.URL,
 			}
 			fileRef, _ := os.Open(filePath)
-			res, err := MultiPartUpload(conn, paramName, fileName, fileRef, nil)
+			res, err := MultiPartUpload(conn, paramName, fileName, -1, fileRef, nil)
 			Ω(err).Should(BeNil())
 			Ω(res.StatusCode).Should(Equal(200))
 			Ω(request.Method).Should(Equal("POST"))
