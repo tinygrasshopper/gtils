@@ -16,7 +16,7 @@ var _ = Describe("S3bucket", func() {
 	rand.Read(testBin)
 	s3, err := SafeCreateS3Bucket("s3.amazonaws.com", "pcfbackup-files", "", "")
 
-	It("should write", func() {
+	PIt("should write", func() {
 		Ω(err).To(BeNil())
 		w, err := s3.NewWriter("remove")
 		Ω(err).To(BeNil())
@@ -27,7 +27,7 @@ var _ = Describe("S3bucket", func() {
 		Ω(len(testBin) == int(l)).To(BeTrue())
 	})
 
-	It("should read", func() {
+	PIt("should read", func() {
 		r, err := s3.NewReader("remove")
 		Ω(err).To(BeNil())
 		Ω(r).ToNot(BeNil())
@@ -39,7 +39,7 @@ var _ = Describe("S3bucket", func() {
 		Ω(bytes.Equal(testBin, out1.Bytes())).To(BeTrue())
 	})
 
-	It("should delete", func() {
+	PIt("should delete", func() {
 		Ω(s3.Delete("remove")).To(BeNil())
 
 		_, err := s3.NewReader("remove")
