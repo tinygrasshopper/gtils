@@ -6,6 +6,8 @@ import (
 	"io"
 	"strings"
 
+	"golang.org/x/crypto/ssh"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/pivotalservices/gtils/command"
@@ -68,6 +70,53 @@ var _ = Describe("Ssh", func() {
 			CloseSuccess:  true}
 		client = &mockClient{session: session}
 
+	})
+
+	Describe("SshConfig", func() {
+		Describe("given a GetAuthMethod method", func() {
+			keySigner, _ := ssh.ParsePrivateKey([]byte(``))
+			var (
+				config               *SshConfig
+				controlAuthMethodKey = []ssh.AuthMethod{
+					ssh.PublicKeys(keySigner),
+				}
+				controlAuthMethodPassword = []ssh.AuthMethod{
+					ssh.Password(""),
+				}
+			)
+
+			Context("when called on a sshconfig object containing a sslkey", func() {
+				BeforeEach(func() {
+					config = &SshConfig{
+						SSLKey:   "random key data",
+						Username: "randomuser",
+						Host:     "asldkjfasd",
+						Port:     8888,
+					}
+				})
+
+				It("then it should return a authmethod which uses keypairs", func() {
+					authMethod := config.GetAuthMethod()
+					Ω(authMethod[0]).Should(BeAssignableToTypeOf(controlAuthMethodKey[0]))
+					Ω(authMethod[0]).ShouldNot(BeAssignableToTypeOf(controlAuthMethodPassword[0]))
+				})
+			})
+			Context("when called on a sshconfig object containing only a username/pass", func() {
+				BeforeEach(func() {
+					config = &SshConfig{
+						Username: "randomuser",
+						Host:     "asldkjfasd",
+						Port:     8888,
+						Password: "",
+					}
+				})
+				It("then it should return a authmethod which uses username/pass auth", func() {
+					authMethod := config.GetAuthMethod()
+					Ω(authMethod[0]).Should(BeAssignableToTypeOf(controlAuthMethodPassword[0]))
+					Ω(authMethod[0]).ShouldNot(BeAssignableToTypeOf(controlAuthMethodKey[0]))
+				})
+			})
+		})
 	})
 
 	Describe("Session Run success", func() {
