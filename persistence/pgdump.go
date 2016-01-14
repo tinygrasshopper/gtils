@@ -50,7 +50,7 @@ func (s *PgDump) restore() (err error) {
 	callList := []string{
 		s.getRestoreCommand(),
 	}
-	err = execute_list(callList, s.Caller)
+	err = executeList(callList, s.Caller)
 	lo.G.Debug("pgdump restore called: ", callList, err)
 	return
 }

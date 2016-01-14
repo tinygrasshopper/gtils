@@ -55,7 +55,7 @@ func (s *MysqlDump) restore() (err error) {
 	callList := []string{
 		s.getImportCommand(),
 	}
-	err = execute_list(callList, s.Caller)
+	err = executeList(callList, s.Caller)
 	lo.G.Debug("mysqldump restore called: ", callList, err)
 	return
 }
