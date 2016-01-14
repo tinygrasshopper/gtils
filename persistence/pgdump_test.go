@@ -43,7 +43,7 @@ var _ = Describe("PgDump", func() {
 			localFilePath = path.Join(dir, "lfile")
 
 			pgDumpInstance = &PgDump{
-				Ip:       ip,
+				IP:       ip,
 				Username: username,
 				Password: password,
 				Caller:   &MockSuccessCall{},
@@ -138,7 +138,7 @@ var _ = Describe("PgDump", func() {
 		Context("With caller successfully execute the command", func() {
 			BeforeEach(func() {
 				pgDumpInstance = &PgDump{
-					Ip:       ip,
+					IP:       ip,
 					Username: username,
 					Password: password,
 					Caller:   &MockSuccessCall{},
@@ -153,7 +153,7 @@ var _ = Describe("PgDump", func() {
 			It("Should execute the pg command", func() {
 				var b bytes.Buffer
 				pgDumpInstance.Dump(&b)
-				cmd := fmt.Sprintf("PGPASSWORD=%s %s -Fc -h %s -U %s -p 0 ", password, PGDMP_DUMP_BIN, ip, username)
+				cmd := fmt.Sprintf("PGPASSWORD=%s %s -Fc -h %s -U %s -p 0 ", password, PGDmpDumpBin, ip, username)
 				Ω(b.String()).Should(Equal(cmd))
 			})
 
@@ -166,7 +166,7 @@ var _ = Describe("PgDump", func() {
 		Context("With caller failed to execute command", func() {
 			BeforeEach(func() {
 				pgDumpInstance = &PgDump{
-					Ip:       ip,
+					IP:       ip,
 					Username: username,
 					Password: password,
 					Caller:   &MockFailCall{},

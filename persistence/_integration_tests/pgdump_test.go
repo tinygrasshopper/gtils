@@ -50,7 +50,7 @@ var _ = Describe("PgDump Integration Tests", func() {
 			)
 			BeforeEach(func() {
 				databaseNameGUID := uuid.New()
-				PGDMP_RESTORE_BIN = strings.TrimPrefix(PGDMP_RESTORE_BIN, cfBinDir)
+				PGDmpRestoreBin = strings.TrimPrefix(PGDmpRestoreBin, cfBinDir)
 				inputReader, _ = os.Open("pgdump_test.go")
 				pgRemoteDump, sshConnectionErr = NewPgRemoteDump(postgresPort, databaseNameGUID, postgresUser, postgresPass, sshConfig)
 				remoteCommandErr = pgRemoteDump.Import(inputReader)
@@ -72,7 +72,7 @@ var _ = Describe("PgDump Integration Tests", func() {
 				remoteCommandErr error
 			)
 			BeforeEach(func() {
-				PGDMP_RESTORE_BIN = strings.TrimPrefix(PGDMP_RESTORE_BIN, cfBinDir)
+				PGDmpRestoreBin = strings.TrimPrefix(PGDmpRestoreBin, cfBinDir)
 				inputReader, _ = os.Open("fixtures/tst.dmp")
 				pgRemoteDump, sshConnectionErr = NewPgRemoteDump(postgresPort, postgresDB, postgresUser, postgresPass, sshConfig)
 				remoteCommandErr = pgRemoteDump.Import(inputReader)
@@ -97,11 +97,11 @@ var _ = Describe("PgDump Integration Tests", func() {
 				remoteCommandErr        error
 			)
 			BeforeEach(func() {
-				PGDMP_RESTORE_BIN = strings.TrimPrefix(PGDMP_RESTORE_BIN, cfBinDir)
+				PGDmpRestoreBin = strings.TrimPrefix(PGDmpRestoreBin, cfBinDir)
 				inputReader, _ := os.Open("fixtures/tst.dmp")
 				remoteEnvStager, _ := NewPgRemoteDump(postgresPort, postgresDB, postgresUser, postgresPass, sshConfig)
 				remoteEnvStager.Import(inputReader)
-				PGDMP_DUMP_BIN = strings.TrimPrefix(PGDMP_DUMP_BIN, cfBinDir)
+				PGDmpDumpBin = strings.TrimPrefix(PGDmpDumpBin, cfBinDir)
 				pgRemoteDump, sshConnectionErr = NewPgRemoteDump(postgresPort, postgresDB, postgresUser, postgresPass, sshConfig)
 				remoteCommandErr = pgRemoteDump.Dump(&outputWriter)
 			})

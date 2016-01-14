@@ -8,6 +8,8 @@ build:
     # Sets the go workspace and places you package
     # at the right place in the workspace tree
     - setup-go-workspace
+    #- golint:
+    #    threshold-fail: ${LINT_THRESHOLD_FAIL}
 
     # Get the dependencies
     - script:

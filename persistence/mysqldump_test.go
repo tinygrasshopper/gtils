@@ -39,7 +39,7 @@ var _ = Describe("MysqlDump", func() {
 			localFilePath = path.Join(dir, "lfile")
 
 			mysqlDumpInstance = &MysqlDump{
-				Ip:       ip,
+				IP:       ip,
 				Username: username,
 				Password: password,
 				Caller:   &MockSuccessCall{},
@@ -134,7 +134,7 @@ var _ = Describe("MysqlDump", func() {
 		Context("With command execute success", func() {
 			BeforeEach(func() {
 				mysqlDumpInstance = &MysqlDump{
-					Ip:       ip,
+					IP:       ip,
 					Username: username,
 					Password: password,
 					Caller:   successCall,
@@ -153,7 +153,7 @@ var _ = Describe("MysqlDump", func() {
 			It("Should execute mysqldump command", func() {
 				var b bytes.Buffer
 				mysqlDumpInstance.Dump(&b)
-				cmd := fmt.Sprintf("%s -u %s -h %s --password=%s --all-databases", MSQLDMP_DUMP_BIN, username, ip, password)
+				cmd := fmt.Sprintf("%s -u %s -h %s --password=%s --all-databases", MySQLDmpDumpBin, username, ip, password)
 				Ω(b.String()).Should(Equal(cmd))
 			})
 		})
@@ -161,7 +161,7 @@ var _ = Describe("MysqlDump", func() {
 		Context("With command execute failed", func() {
 			BeforeEach(func() {
 				mysqlDumpInstance = &MysqlDump{
-					Ip:       ip,
+					IP:       ip,
 					Username: username,
 					Password: password,
 					Caller:   &MockFailCall{},
