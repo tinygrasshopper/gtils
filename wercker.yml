@@ -9,7 +9,7 @@ build:
     # at the right place in the workspace tree
     - setup-go-workspace
     - golint:
-        threshold-fail: 111
+        threshold-fail: ${LINT_THRESHOLD_FAIL}
 
     # Get the dependencies
     - script:
