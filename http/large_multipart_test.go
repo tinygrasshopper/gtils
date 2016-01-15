@@ -23,7 +23,7 @@ var _ = Describe("Multipart", func() {
 	)
 	Describe("LargeMultiPartUpload", func() {
 		var (
-			httpServerMock *mock.HttpServer = &mock.HttpServer{}
+			httpServerMock *mock.HTTPServer = &mock.HTTPServer{}
 			request        *http.Request
 			controlFile    []byte
 			res            *http.Response

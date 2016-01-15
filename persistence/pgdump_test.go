@@ -108,15 +108,15 @@ var _ = Describe("PgDump", func() {
 		Context("called w/ failed copy to remote", func() {
 			BeforeEach(func() {
 				pgDumpInstance.RemoteOps = &mockRemoteOps{
-					Err: mock.READ_FAIL_ERROR,
+					Err: mock.ErrReadFailure,
 				}
 			})
 
 			It("should return failed copy error", func() {
-				l := mock.NewReadWriteCloser(mock.READ_FAIL_ERROR, nil, nil)
+				l := mock.NewReadWriteCloser(mock.ErrReadFailure, nil, nil)
 				err := pgDumpInstance.Import(l)
 				Ω(err).ShouldNot(BeNil())
-				Ω(err).Should(Equal(mock.READ_FAIL_ERROR))
+				Ω(err).Should(Equal(mock.ErrReadFailure))
 			})
 		})
 
