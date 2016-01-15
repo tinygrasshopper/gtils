@@ -91,6 +91,7 @@ var _ = Describe("Ssh", func() {
 						SSLKey:   "random key data",
 						Username: "randomuser",
 						Host:     "asldkjfasd",
+						Password: "xxxxxxx",
 						Port:     8888,
 					}
 				})
@@ -107,7 +108,7 @@ var _ = Describe("Ssh", func() {
 						Username: "randomuser",
 						Host:     "asldkjfasd",
 						Port:     8888,
-						Password: "",
+						Password: "reallysecurestuff",
 					}
 				})
 				It("then it should return a authmethod which uses username/pass auth", func() {

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/xchapter7x/lo"
+
 	"golang.org/x/crypto/ssh"
 )
 
@@ -19,11 +21,13 @@ type SshConfig struct {
 func (s *SshConfig) GetAuthMethod() (authMethod []ssh.AuthMethod) {
 
 	if s.SSLKey == "" {
+		lo.G.Debug("using password for authn")
 		authMethod = []ssh.AuthMethod{
 			ssh.Password(s.Password),
 		}
 
 	} else {
+		lo.G.Debug("using sslkey for authn")
 		keySigner, _ := ssh.ParsePrivateKey([]byte(s.SSLKey))
 
 		authMethod = []ssh.AuthMethod{
