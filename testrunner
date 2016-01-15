@@ -1,7 +1,7 @@
 
 # Check if images are available locally
 DOCKER_LOCAL=""
-if [[ $(docker images|grep redis) && $(docker images|grep mongo) && $(docker images|grep golang) ]]; then 
+if [[ $(docker images|grep uaadb-int) && $(docker images|grep golang) ]]; then 
   echo "Using previously cached docker images"
   DOCKER_LOCAL="--docker-local"
 fi
