@@ -71,6 +71,17 @@ var _ = Describe("Ssh", func() {
 		client = &mockClient{session: session}
 
 	})
+	Describe("NewRemoteExecutor", func() {
+		Describe("given it creates a *DefaultRemoteExecutor to satisfy the Executer interface", func() {
+			Context("when initializing the *DefaultRemoteExecutor", func() {
+				It("then it should not dial the ssh connection, but lazy load it", func() {
+					executor, err := NewRemoteExecutor(SshConfig{})
+					Ω(err).ShouldNot(HaveOccurred())
+					Ω(executor.(*DefaultRemoteExecutor).Client).Should(BeNil())
+				})
+			})
+		})
+	})
 
 	Describe("SshConfig", func() {
 		Describe("given a GetAuthMethod method", func() {
@@ -125,7 +136,8 @@ var _ = Describe("Ssh", func() {
 			It("should write to the writer from the command output", func() {
 				var writer bytes.Buffer
 				executor := &DefaultRemoteExecutor{
-					Client: client,
+					Client:         client,
+					LazyClientDial: func() {},
 				}
 				executor.Execute(&writer, "command")
 				Ω(writer.String()).Should(Equal("mocksession"))
@@ -133,7 +145,8 @@ var _ = Describe("Ssh", func() {
 			It("should not return an error", func() {
 				var writer bytes.Buffer
 				executor := &DefaultRemoteExecutor{
-					Client: client,
+					Client:         client,
+					LazyClientDial: func() {},
 				}
 				err := executor.Execute(&writer, "command")
 				Ω(err).ShouldNot(HaveOccurred())
@@ -147,7 +160,8 @@ var _ = Describe("Ssh", func() {
 			It("should return an error on bad stdpipline", func() {
 				var writer bytes.Buffer
 				executor := &DefaultRemoteExecutor{
-					Client: client,
+					Client:         client,
+					LazyClientDial: func() {},
 				}
 				session.StdOutSuccess = false
 				err := executor.Execute(&writer, "command")
@@ -160,7 +174,8 @@ var _ = Describe("Ssh", func() {
 				var writer bytes.Buffer
 				session.StartSuccess = false
 				executor := &DefaultRemoteExecutor{
-					Client: client,
+					Client:         client,
+					LazyClientDial: func() {},
 				}
 				err := executor.Execute(&writer, "command")
 				Ω(err).Should(HaveOccurred())
