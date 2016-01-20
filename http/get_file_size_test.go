@@ -17,7 +17,7 @@ var _ = Describe("given a GetFileSize function", func() {
 			Ω(GetFileSize(filename)).Should(Equal(info.Size()))
 		})
 	})
-	Context("when called on a valid file", func() {
+	Context("when called on a in-valid file", func() {
 		It("then it should return -1", func() {
 			filename := "this-file-does-not-exist"
 			Ω(GetFileSize(filename)).Should(Equal(int64(-1)))
