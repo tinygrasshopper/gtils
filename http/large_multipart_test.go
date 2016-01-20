@@ -22,9 +22,11 @@ var _ = Describe("Multipart", func() {
 	)
 	Describe("LargeMultiPartUpload", func() {
 		var (
+			conn           ConnAuth
+			fixtureFileRef *os.File
+			filePath                        = fmt.Sprintf("fixtures/%s", fileName)
 			httpServerMock *mock.HTTPServer = &mock.HTTPServer{}
 			request        *http.Request
-			controlFile    []byte
 			res            *http.Response
 			err            error
 			multipartForm  *multipart.Form
@@ -44,56 +46,51 @@ var _ = Describe("Multipart", func() {
 				multipartForm = request.MultipartForm
 				fmt.Println(err)
 			})
-			filePath := fmt.Sprintf("fixtures/%s", fileName)
-			conn := ConnAuth{
+			conn = ConnAuth{
 				Url: httpServerMock.Server.URL,
 			}
-			fileRef, _ := os.Open(filePath)
-			defer fileRef.Close()
-			res, err = LargeMultiPartUpload(conn, paramName, filePath, getFileSize(filePath), fileRef, controlParams)
-			controlFile, _ = ioutil.ReadFile(filePath)
+			fixtureFileRef, _ = os.Open(filePath)
 		})
 
 		AfterEach(func() {
 			lo.G.Debug("tearing down server")
 			multipartForm = nil
 			httpServerMock.Teardown()
+			fixtureFileRef.Close()
 		})
 
-		It("should pass in the password paramater as part of the request", func() {
-			Ω(multipartForm.Value).Should(Equal(controlValue))
+		Context("when called with a -1 filesize value", func() {
+			BeforeEach(func() {
+				filesize := int64(-1)
+				res, err = LargeMultiPartUpload(conn, paramName, filePath, filesize, fixtureFileRef, controlParams)
+			})
+
+			It("should interogate the file and insert the actual filesize", func() {
+				Ω(err).ShouldNot(HaveOccurred())
+			})
 		})
 
-		It("should send the file to the server", func() {
-			fixturePath := fmt.Sprintf("fixtures/%s", fileName)
-			fixtureBytes, _ := ioutil.ReadFile(fixturePath)
-			file, _ := multipartForm.File["installation[file]"][0].Open()
-			fileBytes, _ := ioutil.ReadAll(file)
+		Context("when called with valid args and actual filesize value", func() {
+			BeforeEach(func() {
+				res, err = LargeMultiPartUpload(conn, paramName, filePath, GetFileSize(filePath), fixtureFileRef, controlParams)
+			})
+			It("should pass in the password paramater as part of the request", func() {
+				Ω(multipartForm.Value).Should(Equal(controlValue))
+			})
 
-			Ω(err).Should(BeNil())
-			Ω(fileBytes).Should(Equal(fixtureBytes))
-			Ω(res.StatusCode).Should(Equal(200))
-			Ω(request.Method).Should(Equal("POST"))
-			Ω(res).ShouldNot(BeNil())
-			Ω(request.ContentLength).Should(Equal(res.Request.ContentLength))
+			It("should send the file to the server", func() {
+				fixturePath := fmt.Sprintf("fixtures/%s", fileName)
+				fixtureBytes, _ := ioutil.ReadFile(fixturePath)
+				file, _ := multipartForm.File["installation[file]"][0].Open()
+				fileBytes, _ := ioutil.ReadAll(file)
+
+				Ω(err).Should(BeNil())
+				Ω(fileBytes).Should(Equal(fixtureBytes))
+				Ω(res.StatusCode).Should(Equal(200))
+				Ω(request.Method).Should(Equal("POST"))
+				Ω(res).ShouldNot(BeNil())
+				Ω(request.ContentLength).Should(Equal(res.Request.ContentLength))
+			})
 		})
 	})
 })
-
-func getFileSize(filename string) (fileSize int64) {
-	var (
-		fileInfo os.FileInfo
-		err      error
-		file     *os.File
-	)
-
-	if file, err = os.Open(filename); err == nil {
-		fileInfo, err = file.Stat()
-		fileSize = fileInfo.Size()
-	}
-
-	if err != nil {
-		fileSize = -1
-	}
-	return
-}
