@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/pivotalservices/gtils/command"
 	"github.com/pivotalservices/gtils/mock"
 	"github.com/pivotalservices/gtils/osutils"
 	. "github.com/pivotalservices/gtils/persistence"
@@ -176,6 +177,44 @@ var _ = Describe("MysqlDump", func() {
 				err := mysqlDumpInstance.Dump(&writer)
 				Ω(err).ShouldNot(BeNil())
 			})
+		})
+	})
+	Context("Constructor tests", func() {
+		var sshConfig command.SshConfig
+		var err error
+		BeforeEach(func() {
+			sshConfig = command.SshConfig{
+				Username: "userId",
+				Password: "password",
+				Host:     "127.0.0.1",
+				Port:     22,
+			}
+		})
+		Context("NewRemoteMysqlDump", func() {
+			Context("With valid config", func() {
+				It("Should return non nil MysqlDump", func() {
+					mysqlDumpInstance, err = NewRemoteMysqlDump("userName", "password", sshConfig)
+					Ω(err).Should(BeNil())
+					Ω(mysqlDumpInstance).ShouldNot(BeNil())
+				})
+			})
+		})
+		Context("NewRemoteMysqlDumpWithPath", func() {
+			Context("With valid config and non-empty path", func() {
+				It("Should return non nil MysqlDump", func() {
+					mysqlDumpInstance, err = NewRemoteMysqlDumpWithPath("userName", "password", sshConfig, "/var/somepath")
+					Ω(err).Should(BeNil())
+					Ω(mysqlDumpInstance).ShouldNot(BeNil())
+				})
+			})
+			Context("With valid config and empty path", func() {
+				It("Should return non nil MysqlDump", func() {
+					mysqlDumpInstance, err = NewRemoteMysqlDumpWithPath("userName", "password", sshConfig, "")
+					Ω(err).Should(BeNil())
+					Ω(mysqlDumpInstance).ShouldNot(BeNil())
+				})
+			})
+
 		})
 	})
 })
