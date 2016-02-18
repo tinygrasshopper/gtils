@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/sftp"
+	"github.com/xchapter7x/lo"
 )
 
 type sftpClient interface {
@@ -21,6 +22,7 @@ func SafeRemoveSSH(client sftpClient, filePath string) (err error) {
 		client: client,
 	}
     if !ssh.exists(filePath) {
+        lo.G.Debug("Removing %s", filePath)
 	    err = client.Remove(filePath)
 	}
 	return
