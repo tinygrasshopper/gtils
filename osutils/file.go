@@ -9,7 +9,7 @@ import (
 	"github.com/xchapter7x/lo"
 )
 
-type sftpClient interface {
+type SFTPClient interface {
 	Create(path string) (*sftp.File, error)
 	Mkdir(path string) error
 	ReadDir(p string) ([]os.FileInfo, error)
@@ -17,7 +17,7 @@ type sftpClient interface {
 }
 
 // SafeRemoveSSH removes a file on a remote machine via an ssh client
-func SafeRemoveSSH(client sftpClient, filePath string) (err error) {
+func SafeRemoveSSH(client SFTPClient, filePath string) (err error) {
     ssh := sshClientBucket{
 		client: client,
 	}
@@ -29,7 +29,7 @@ func SafeRemoveSSH(client sftpClient, filePath string) (err error) {
 }
 
 // SafeCreateSSH creates a file, creating parent directories if needed on a remote machine via an ssh client
-func SafeCreateSSH(client sftpClient, name ...string) (file *sftp.File, err error) {
+func SafeCreateSSH(client SFTPClient, name ...string) (file *sftp.File, err error) {
 	ssh := sshClientBucket{
 		client: client,
 	}
@@ -43,7 +43,7 @@ func SafeCreateSSH(client sftpClient, name ...string) (file *sftp.File, err erro
 }
 
 type sshClientBucket struct {
-	client sftpClient
+	client SFTPClient
 }
 
 func (s sshClientBucket) remoteSafeMkdirAll(base string) (err error) {
