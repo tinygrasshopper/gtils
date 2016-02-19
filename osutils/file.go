@@ -18,12 +18,13 @@ type SFTPClient interface {
 
 // SafeRemoveSSH removes a file on a remote machine via an ssh client
 func SafeRemoveSSH(client SFTPClient, filePath string) (err error) {
-    ssh := sshClientBucket{
+	ssh := sshClientBucket{
 		client: client,
 	}
-    if !ssh.exists(filePath) {
-        lo.G.Debug("Removing %s", filePath)
-	    err = client.Remove(filePath)
+	lo.G.Debug("Preparing to remove %s", filePath)
+	if !ssh.exists(filePath) {
+		lo.G.Debug("Removing %s", filePath)
+		err = client.Remove(filePath)
 	}
 	return
 }
