@@ -44,6 +44,10 @@ func (s *mockRemoteOps) UploadFile(lfile io.Reader) error {
 	return s.Err
 }
 
+func (s *mockRemoteOps) RemoveRemoteFile() (err error) {
+    return err
+}
+
 type MockSuccessCall struct{}
 
 func (s MockSuccessCall) Execute(destination io.Writer, command string) (err error) {

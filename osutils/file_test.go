@@ -29,6 +29,24 @@ var _ = Describe("File", func() {
 		os.RemoveAll(dir)
 	})
 
+	Describe("File removal", func() {
+		Context("remote file", func() {
+			var client *sftpClientMock
+			var fsState string = path.Join("some", "path")
+			Context("RemoveRemoteFile call returns error", func() {
+				BeforeEach(func() {
+					client = &sftpClientMock{
+						RemoveFileError: true,
+					}
+				})
+
+				It("should delete the file and return non nil error", func() {
+					err := SafeRemoveSSH(client,fsState)
+					Ω(err).ShouldNot(BeNil())
+				})
+			})
+		})
+	})
 	Describe("File creation", func() {
 		Context("remote file", func() {
 			var client *sftpClientMock
@@ -145,6 +163,7 @@ type sftpClientMock struct {
 	CreateError     bool
 	MkdirError      bool
 	FileSystemState string
+	RemoveFileError bool
 }
 
 func (s *sftpClientMock) Create(path string) (f *sftp.File, err error) {
@@ -173,5 +192,13 @@ func (s *sftpClientMock) ReadDir(p string) (fi []os.FileInfo, err error) {
 	if !strings.HasPrefix(s.FileSystemState, p) {
 		err = fmt.Errorf("dir doesnt exist")
 	}
+	return
+}
+
+func (s *sftpClientMock) Remove(path string) (err error) {
+	if s.RemoveFileError {
+		err = fmt.Errorf("remove failed")
+	}
+
 	return
 }
