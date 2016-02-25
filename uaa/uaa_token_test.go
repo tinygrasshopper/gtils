@@ -33,7 +33,35 @@ var _ = Describe("given a GetToken() function", func() {
 			Ω(token).Should(Equal(controlToken))
 		})
 	})
+
+	Context("when call to uaa target yields error", func() {
+		var token string
+		var err error
+		var server *ghttp.Server
+
+		BeforeEach(func() {
+			server = NewErrorTestServer(ghttp.NewTLSServer())
+			token, err = uaa.GetToken(server.URL()+"/uaa", "fakeuser", "fakepass", "opsman", "")
+		})
+
+		AfterEach(func() {
+			server.Close()
+		})
+
+		It("Then it should return the response body as an error message", func() {
+			Ω(err).Should(HaveOccurred())
+			Ω(token).Should(BeEmpty())
+		})
+	})
 })
+
+func NewErrorTestServer(server *ghttp.Server) *ghttp.Server {
+	errTokenHandler := ghttp.RespondWith(http.StatusUnauthorized, "{error:somefailure}")
+	server.AppendHandlers(
+		errTokenHandler,
+	)
+	return server
+}
 
 func NewTestServer(server *ghttp.Server, token string) *ghttp.Server {
 	tokenJson := getFakeToken("./fixtures/token_response.json", token, "", "")

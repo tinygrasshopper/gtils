@@ -51,6 +51,30 @@ var _ = Describe("Http", func() {
 				_, err := Request(httpEntity, "Get", nil)
 				Ω(err).Should(BeNil())
 			})
+
+			Context("when there is no Authorization value given", func() {
+				It("should use basic auth w/ the given username/password", func() {
+					Request(httpEntity, "Get", nil)
+					Ω(requestCatcher.Header["Authorization"][0]).Should(Equal("Basic dXNlcm5hbWU6cGFzc3dvcmQ="))
+				})
+			})
+
+			Context("when there is Authorization value given", func() {
+				var controlAuth = "Bearer faketokengoeshere"
+				var httpEntity = HttpRequestEntity{
+					Url:           "http://endpoint/test",
+					Username:      "username",
+					Password:      "password",
+					ContentType:   "contentType",
+					Authorization: controlAuth,
+				}
+				It("should use the value given", func() {
+					Request(httpEntity, "Get", nil)
+					Ω(requestCatcher.Header["Authorization"][0]).ShouldNot(Equal("Basic dXNlcm5hbWU6cGFzc3dvcmQ="))
+					Ω(requestCatcher.Header["Authorization"][0]).Should(Equal(controlAuth))
+				})
+			})
+
 			It("Should execute correct request", func() {
 				resp, _ := Request(httpEntity, "Get", nil)
 				Ω(requestCatcher.URL.Host).Should(Equal("endpoint"))
