@@ -3,6 +3,7 @@ package uaa
 import (
 	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -25,7 +26,7 @@ func GetToken(uaaURL, opsManagerUsername, opsManagerPassword, clientID, clientSe
 	}
 	client := &http.Client{Transport: tr}
 
-	if res, err = client.PostForm(tokenURL, params); err == nil {
+	if res, err = client.PostForm(tokenURL, params); err == nil && res.StatusCode == http.StatusOK {
 		var body []byte
 
 		if body, err = ioutil.ReadAll(res.Body); err == nil {
@@ -35,6 +36,9 @@ func GetToken(uaaURL, opsManagerUsername, opsManagerPassword, clientID, clientSe
 				token = t.AccessToken
 			}
 		}
+	} else if res.StatusCode != http.StatusOK {
+		body, _ := ioutil.ReadAll(res.Body)
+		err = errors.New(string(body))
 	}
 	return
 }
