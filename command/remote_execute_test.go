@@ -82,6 +82,20 @@ var _ = Describe("Ssh", func() {
 			})
 		})
 	})
+	Describe("Given a faultRemoteExecutor", func() {
+		Context("when calling Execute and a client connection can not be made", func() {
+			var fakeExecutor *DefaultRemoteExecutor
+			BeforeEach(func() {
+				fakeExecutor = new(DefaultRemoteExecutor)
+				fakeExecutor.LazyClientDial = func() {}
+			})
+			It("then we should error and exit gracefully", func() {
+				Ω(func() {
+					fakeExecutor.Execute(bytes.NewBufferString(""), "command string")
+				}).ShouldNot(Panic())
+			})
+		})
+	})
 
 	Describe("SshConfig", func() {
 		Describe("given a GetAuthMethod method", func() {
