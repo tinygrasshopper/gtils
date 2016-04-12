@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"code.google.com/p/go-uuid/uuid"
+	"github.com/pborman/uuid"
 	"github.com/pivotalservices/gtils/command"
 	. "github.com/pivotalservices/gtils/persistence"
 
