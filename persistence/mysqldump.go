@@ -21,15 +21,16 @@ func NewMysqlDump(ip, username, password string) *MysqlDump {
 	return m
 }
 
+//NewRemoteMysqlDumpWithPath -
 func NewRemoteMysqlDumpWithPath(username, password string, sshCfg command.SshConfig, remoteArchivePath string) (*MysqlDump, error) {
-    lo.G.Debug("setting up a new remote MyslDump object")
+	lo.G.Debug("setting up a new remote MyslDump object")
 	remoteExecuter, err := command.NewRemoteExecutor(sshCfg)
 
-    remoteOps := osutils.NewRemoteOperations(sshCfg)
-    if len(remoteArchivePath) > 0 {
-        remoteOps.SetPath(remoteArchivePath)
-    }
-    
+	remoteOps := osutils.NewRemoteOperations(sshCfg)
+	if len(remoteArchivePath) > 0 {
+		remoteOps.SetPath(remoteArchivePath)
+	}
+
 	return &MysqlDump{
 		IP:        "localhost",
 		Username:  username,
@@ -38,6 +39,7 @@ func NewRemoteMysqlDumpWithPath(username, password string, sshCfg command.SshCon
 		RemoteOps: remoteOps,
 	}, err
 }
+
 //NewRemoteMysqlDump - will initialize a mysqldmp for remote execution
 func NewRemoteMysqlDump(username, password string, sshCfg command.SshConfig) (*MysqlDump, error) {
 	return NewRemoteMysqlDumpWithPath(username, password, sshCfg, "")
@@ -49,13 +51,13 @@ func (s *MysqlDump) Import(lfile io.Reader) (err error) {
 		err = s.restore()
 	}
 	lo.G.Debug("mysqldump Import called: ", err)
-	
+
 	if err != nil {
-	    return
+		return
 	}
-	
+
 	err = s.RemoteOps.RemoveRemoteFile()
-	
+
 	lo.G.Debug("mysqldump remove remote file called: ", err)
 	return
 }

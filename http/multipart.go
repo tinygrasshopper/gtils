@@ -8,6 +8,7 @@ import (
 	"net/http"
 )
 
+//ConnAuth -
 type ConnAuth struct {
 	Url         string
 	Username    string
@@ -15,9 +16,13 @@ type ConnAuth struct {
 	BearerToken string
 }
 
+//MultiPartBodyFunc -
 type MultiPartBodyFunc func(string, string, io.Reader, map[string]string) (io.ReadWriter, string, error)
+
+//MultiPartUploadFunc -
 type MultiPartUploadFunc func(conn ConnAuth, paramName, filename string, fileSize int64, fileRef io.Reader, params map[string]string) (res *http.Response, err error)
 
+//MultiPartBody -
 func MultiPartBody(paramName, filename string, fileRef io.Reader, params map[string]string) (body io.ReadWriter, contentType string, err error) {
 	var part io.Writer
 
@@ -38,6 +43,7 @@ func MultiPartBody(paramName, filename string, fileRef io.Reader, params map[str
 	return
 }
 
+//MultiPartUpload -
 var MultiPartUpload = func(conn ConnAuth, paramName, filename string, fileSize int64, fileRef io.Reader, params map[string]string) (res *http.Response, err error) {
 	var contentType string
 	var rbody io.Reader
@@ -61,6 +67,7 @@ var MultiPartUpload = func(conn ConnAuth, paramName, filename string, fileSize i
 	return
 }
 
+//NewTransportClient -
 var NewTransportClient = func() (client interface {
 	Do(*http.Request) (*http.Response, error)
 }) {

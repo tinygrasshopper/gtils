@@ -10,7 +10,7 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-// Config for the SSH connection
+//SshConfig - for the SSH connection
 type SshConfig struct {
 	Username string
 	Password string
@@ -19,6 +19,7 @@ type SshConfig struct {
 	SSLKey   string
 }
 
+//GetAuthMethod -
 func (s *SshConfig) GetAuthMethod() (authMethod []ssh.AuthMethod) {
 
 	if s.SSLKey == "" {
@@ -38,32 +39,36 @@ func (s *SshConfig) GetAuthMethod() (authMethod []ssh.AuthMethod) {
 	return
 }
 
+//ClientInterface -
 type ClientInterface interface {
 	NewSession() (SSHSession, error)
 }
 
+//DefaultRemoteExecutor -
 type DefaultRemoteExecutor struct {
 	Client         ClientInterface
 	LazyClientDial func()
 	once           sync.Once
 }
 
-//Wrapper of ssh client to match client interface signature, since client.NewSession() does not use an interface
+//SshClientWrapper - of ssh client to match client interface signature, since client.NewSession() does not use an interface
 type SshClientWrapper struct {
 	sshclient *ssh.Client
 }
 
+//NewClientWrapper -
 func NewClientWrapper(client *ssh.Client) *SshClientWrapper {
 	return &SshClientWrapper{
 		sshclient: client,
 	}
 }
 
+//NewSession -
 func (c *SshClientWrapper) NewSession() (SSHSession, error) {
 	return c.sshclient.NewSession()
 }
 
-// This method creates executor based on ssh, it has concrete ssh reference
+//NewRemoteExecutor - This method creates executor based on ssh, it has concrete ssh reference
 func NewRemoteExecutor(sshCfg SshConfig) (executor Executer, err error) {
 	clientconfig := &ssh.ClientConfig{
 		User: sshCfg.Username,
@@ -82,6 +87,7 @@ func NewRemoteExecutor(sshCfg SshConfig) (executor Executer, err error) {
 	return
 }
 
+//SSHSession -
 type SSHSession interface {
 	Start(cmd string) error
 	Wait() error
@@ -89,7 +95,7 @@ type SSHSession interface {
 	Close() error
 }
 
-// Copy the output from a command to the specified io.Writer
+//Execute - Copy the output from a command to the specified io.Writer
 func (executor *DefaultRemoteExecutor) Execute(dest io.Writer, command string) (err error) {
 	var session SSHSession
 	var stdoutReader io.Reader

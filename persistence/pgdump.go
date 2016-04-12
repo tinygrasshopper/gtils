@@ -21,6 +21,7 @@ func NewPgDump(ip string, port int, database, username, password string) *PgDump
 	}
 }
 
+//NewPgRemoteDumpWithPath -
 func NewPgRemoteDumpWithPath(port int, database, username, password string, sshCfg command.SshConfig, remoteArchivePath string) (*PgDump, error) {
 	remoteExecuter, err := command.NewRemoteExecutor(sshCfg)
 	remoteOps := osutils.NewRemoteOperations(sshCfg)
