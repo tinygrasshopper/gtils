@@ -16,6 +16,7 @@ func (cmd localExecute) Execute(destination io.Writer, command string) (err erro
 	return
 }
 
+//NewLocalExecuter -
 func NewLocalExecuter() Executer {
 	return localExecute(exec.Command)
 }

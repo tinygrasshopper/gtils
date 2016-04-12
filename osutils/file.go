@@ -9,6 +9,7 @@ import (
 	"github.com/xchapter7x/lo"
 )
 
+//SFTPClient -
 type SFTPClient interface {
 	Create(path string) (*sftp.File, error)
 	Mkdir(path string) error

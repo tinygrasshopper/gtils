@@ -10,6 +10,7 @@ import (
 	"net/url"
 )
 
+//GetToken -
 func GetToken(uaaURL, opsManagerUsername, opsManagerPassword, clientID, clientSecret string) (token string, err error) {
 	var res *http.Response
 	params := url.Values{

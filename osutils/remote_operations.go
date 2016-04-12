@@ -19,6 +19,7 @@ func NewRemoteOperations(sshCfg command.SshConfig) *RemoteOperations {
 	return NewRemoteOperationsWithPath(sshCfg, RemoteImportPath)
 }
 
+//NewRemoteOperationsWithPath -
 func NewRemoteOperationsWithPath(sshCfg command.SshConfig, remoteImportPath string) *RemoteOperations {
 	if len(remoteImportPath) == 0 {
 		panic("remoteImportPath cannot be blank")
@@ -75,7 +76,7 @@ func newSSHConnection(config command.SshConfig, clientConfig *ssh.ClientConfig) 
 	return
 }
 
-//Remove Remote File - get a file from a remote system and return a writecloser to it
+//RemoveRemoteFile - get a file from a remote system and return a writecloser to it
 func (s *RemoteOperations) RemoveRemoteFile() (err error) {
 	var sftpclient SFTPClient
 	sftpclient, err = s.getClient()

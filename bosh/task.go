@@ -9,6 +9,7 @@ import (
 	"strconv"
 )
 
+//Task -
 type Task struct {
 	Id          int    `json:"id"`
 	State       string `json:"state"`
@@ -17,17 +18,22 @@ type Task struct {
 }
 
 const (
-	ERROR      int = 1
+	//ERROR -
+	ERROR int = 1
+	//PROCESSING -
 	PROCESSING int = 2
-	DONE       int = 3
-	QUEUED     int = 4
+	//DONE -
+	DONE int = 3
+	//QUEUED -
+	QUEUED int = 4
 )
 
-var TASKRESULT map[string]int = map[string]int{"error": ERROR, "processing": PROCESSING, "done": DONE, "queued": QUEUED}
+//TASKRESULT -
+var TASKRESULT = map[string]int{"error": ERROR, "processing": PROCESSING, "done": DONE, "queued": QUEUED}
 
-func retrieveTaskId(resp *http.Response) (taskId int, err error) {
+func retrieveTaskID(resp *http.Response) (taskID int, err error) {
 	if resp.StatusCode != 302 {
-		err = TaskRedirectStatusCodeError
+		err = ErrorTaskRedirectStatusCode
 		return
 	}
 	redirectUrls := resp.Header["Location"]
@@ -42,7 +48,7 @@ func retrieveTaskId(resp *http.Response) (taskId int, err error) {
 
 func retrieveTaskStatus(resp *http.Response) (task *Task, err error) {
 	if resp.StatusCode != 200 {
-		err = TaskStatusCodeError
+		err = ErrorTaskStatusCode
 		return
 	}
 	task = &Task{}

@@ -8,13 +8,14 @@ import (
 	"strings"
 )
 
+//ManifestResponse -
 type ManifestResponse struct {
 	Manifest string `json:"manifest"`
 }
 
 func retrieveManifest(response *http.Response) (manifest io.Reader, err error) {
 	if response.StatusCode != 200 {
-		err = ManifestStatusCodeError
+		err = ErrorManifestStatusCode
 		return
 	}
 	m := ManifestResponse{}
