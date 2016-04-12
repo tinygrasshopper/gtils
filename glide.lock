@@ -1,0 +1,33 @@
+hash: f10eb4891c6c8824cc83a3779232f5307a559a48270939ea0a7eba4adb131eb9
+updated: 2016-04-12T00:04:35.984781917-05:00
+imports:
+- name: github.com/golang/protobuf
+  version: 2402d76f3d41f928c7902a765dfc872356dd3aad
+  subpackages:
+  - proto
+- name: github.com/kr/fs
+  version: 2788f0dbd16903de03cb8186e5c7d97b69ad387b
+- name: github.com/onsi/ginkgo
+  version: e43390e35a4a88f3f95d5ddf9055efb7a1170469
+- name: github.com/onsi/gomega
+  version: 0fe204460da2c8fa1babcaac196e694de8f1aaa1
+- name: github.com/op/go-logging
+  version: dfaf3dff9b631bc4236201d90d41ee0de9202889
+- name: github.com/pborman/uuid
+  version: c55201b036063326c5b1b89ccfe45a184973d073
+- name: github.com/pivotal-golang/lager
+  version: 95b2ada4cdf781bdcf07e5207879e034ac8c5314
+- name: github.com/pkg/sftp
+  version: 8a7343c6ed99a2934aea9c08c923c11df775b6db
+- name: github.com/rlmcpherson/s3gof3r
+  version: b574ee38528c51c2c8652b79e71245817c59bd61
+- name: github.com/technoweenie/multipartstreamer
+  version: a90a01d73ae432e2611d178c18367fbaa13e0154
+- name: github.com/xchapter7x/lo
+  version: aa2602d0e8e8647f0ce7b53109b37040941915aa
+- name: golang.org/x/crypto
+  version: ""
+  subpackages:
+  - ssh
+  - curve25519
+devImports: []
