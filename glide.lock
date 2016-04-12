@@ -1,5 +1,5 @@
-hash: f10eb4891c6c8824cc83a3779232f5307a559a48270939ea0a7eba4adb131eb9
-updated: 2016-04-12T00:04:35.984781917-05:00
+hash: adb043aa67fe50ca50cba159c9f82cc51c8075498755827a7b11f5e47b2ea9dd
+updated: 2016-04-12T00:35:59.392821758-05:00
 imports:
 - name: github.com/golang/protobuf
   version: 2402d76f3d41f928c7902a765dfc872356dd3aad
@@ -26,7 +26,7 @@ imports:
 - name: github.com/xchapter7x/lo
   version: aa2602d0e8e8647f0ce7b53109b37040941915aa
 - name: golang.org/x/crypto
-  version: ""
+  version: 3fbbcd23f1cb824e69491a5930cfeff09b12f4d2
   subpackages:
   - ssh
   - curve25519
