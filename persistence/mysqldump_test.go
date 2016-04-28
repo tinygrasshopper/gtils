@@ -28,15 +28,13 @@ var _ = Describe("MysqlDump", func() {
 	)
 	Context("Import", func() {
 		var (
-			remoteFilePath string
-			localFilePath  string
-			dir            string
-			sftpFailErr    error = errors.New("failed to make sftp connection")
+			localFilePath string
+			dir           string
+			sftpFailErr   error = errors.New("failed to make sftp connection")
 		)
 
 		BeforeEach(func() {
 			dir, _ = ioutil.TempDir("", "spec")
-			remoteFilePath = path.Join(dir, "rfile")
 			localFilePath = path.Join(dir, "lfile")
 
 			mysqlDumpInstance = &MysqlDump{
