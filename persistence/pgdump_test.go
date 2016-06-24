@@ -133,6 +133,84 @@ var _ = Describe("PgDump", func() {
 		})
 	})
 
+	Context("Restore", func() {
+		var (
+			localFilePath string
+			dir           string
+			output        bytes.Buffer
+		)
+
+		Context("Restore Commands", func() {
+			BeforeEach(func() {
+				dir, _ = ioutil.TempDir("", "spec")
+				localFilePath = path.Join(dir, "lfile")
+
+				pgDumpInstance = &PgDump{
+					IP:       ip,
+					Username: username,
+					Password: password,
+					Port:     5432,
+					Database: "bosh",
+					Caller:   &MockSuccessCall{},
+					RemoteOps: &mockRemoteOps{
+						Writer: &output,
+					},
+				}
+				pgCatchCommand = ""
+			})
+
+			AfterEach(func() {
+				pgDumpInstance = nil
+			})
+
+			It("Should execute the pg command without recreate", func() {
+				controlString := "hello there"
+				l, _ := osutils.SafeCreate(localFilePath)
+				l.WriteString(controlString)
+				l.Close()
+				l, _ = os.Open(localFilePath)
+
+				rescueStdout := os.Stdout
+				r, w, _ := os.Pipe()
+				os.Stdout = w
+
+				pgDumpInstance.RecreateOnRestore = false
+				pgDumpInstance.Import(l)
+
+				w.Close()
+				outBytes, _ := ioutil.ReadAll(r)
+				out := string(outBytes)
+				os.Stdout = rescueStdout
+
+				cmd := fmt.Sprintf("PGPASSWORD=%s %s -h %s -U %s -x -p %d -c  -d %s %s", password, PGDmpRestoreBin, ip, username, 5432, "bosh", "/tmp/archive.backup")
+				Ω(out).Should(Equal(cmd))
+			})
+
+			It("Should execute the pg command with recreate", func() {
+				controlString := "hello there"
+				l, _ := osutils.SafeCreate(localFilePath)
+				l.WriteString(controlString)
+				l.Close()
+				l, _ = os.Open(localFilePath)
+
+				rescueStdout := os.Stdout
+				r, w, _ := os.Pipe()
+				os.Stdout = w
+
+				pgDumpInstance.RecreateOnRestore = true
+				pgDumpInstance.Import(l)
+
+				w.Close()
+				outBytes, _ := ioutil.ReadAll(r)
+				out := string(outBytes)
+				os.Stdout = rescueStdout
+
+				cmd := fmt.Sprintf("PGPASSWORD=%s %s -h %s -U %s -x -p %d -c -C -d %s %s", password, PGDmpRestoreBin, ip, username, 5432, "bosh", "/tmp/archive.backup")
+				Ω(out).Should(Equal(cmd))
+			})
+		})
+	})
+
 	Context("Dump", func() {
 		Context("With caller successfully execute the command", func() {
 			BeforeEach(func() {
